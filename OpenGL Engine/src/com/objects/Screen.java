@@ -50,7 +50,7 @@ public class Screen extends Object {
 	}
 	
 	public void load() {
-		if(finished && !loaded){
+		if(ready && !loaded){
 			mesh.loadVBO();
 			initializeFbo();
 			loaded = true;

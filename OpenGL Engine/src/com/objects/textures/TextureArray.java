@@ -30,7 +30,7 @@ public class TextureArray extends Texture{
 	}
 	
 	public void load() {
-		if (finished && !loaded) {
+		if (ready && !loaded) {
 			initializeTex();
 			loaded = true;
 		}

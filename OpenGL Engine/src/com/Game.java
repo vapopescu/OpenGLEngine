@@ -7,34 +7,41 @@ import com.shaders.*;
 import com.utils.math.*;
 
 public class Game extends Loadable {
-	Screen window = new Screen(1.0f, 0.3f, 0.3f);
-	ScreenMS screen = new ScreenMS(0.3f, 0.3f, 1.0f);
+	Screen window = new Screen();
+	ScreenMS screen = new ScreenMS();
+	Camera camera = new Camera();
 	Model m1 = new Model();
 	Model m2 = new Model();
 	Terrain terrain = new Terrain();
-	Light light = null;
+	Light light = new Light();
 
 	public Game() {
 		startThread();
 	}
 
 	protected void thread() {
-		new Camera();
-		light = new Light(Light.DIRECT, 10, 10, 10);
-		m1 = new Model("Sphere");
-		m2 = new Model("Ground");
-		terrain = new Terrain("Pit");
+		window = new Screen(1.0f, 0.3f, 0.3f);
+		subcomp.add(screen = new ScreenMS(0.3f, 0.3f, 1.0f));
+		subcomp.add(camera);
+		subcomp.add(m1 = new Model("Sphere"));
+		subcomp.add(m2 = new Model("Ground"));
+		subcomp.add(terrain = new Terrain("Pit"));
+		subcomp.add(light = new Light(Light.DIRECT, 10, 10, 10));
+		ready = true;
 	}
 	
 	public void load() {
-		float f = loadPercent();
+		float f = readyPercent();
 		glClearColor(f, f, f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		screen.load();
+		camera.load();
 		m1.load();
 		m2.load();
 		terrain.load();
+		light.load();
+		loaded = true;
 	}
 	
 	public void render() {
@@ -48,6 +55,7 @@ public class Game extends Loadable {
 		Shader.setVPMatrices(viewMatrix, projectionMatrix);
 		Shader.setLight(diffuseColor, ambientColor, specularColor, lightPosition);
 		
+		//TODO Simplify Frame buffer control.
 		//window.drawTo();
 		screen.drawTo();
 		m1.render();
@@ -56,14 +64,6 @@ public class Game extends Loadable {
 		
 		window.drawTo();
 		screen.render();
-	}
-	
-	public float loadPercent() {
-		return (m1.loadPercent() + m2.loadPercent() + terrain.loadPercent() + screen.loadPercent()) / 4;
-	}
-	
-	public boolean isLoaded() {
-		return m1.isLoaded() && m2.isLoaded() && terrain.isLoaded() && screen.isLoaded();
 	}
 	
 	public void destroy() {

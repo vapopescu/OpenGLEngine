@@ -23,9 +23,11 @@ public class Terrain extends Object{
 	private float def = 4;
 	
 	private int sId[];
+	private int tiles = 8;
 	private Mesh mesh = new Mesh();
 	private Texture2D heightMap = new Texture2D();
 	private TileMap tileMap = new TileMap();
+	//private Texture2D[] splatMap = new Texture2D[tiles];
 	
 	public Terrain() {
 		
@@ -37,10 +39,10 @@ public class Terrain extends Object{
 	}
 
 	protected void thread() {
-		heightMap = new Texture2D(0, "terrain/" + name + "/heightmap.tga", false);
-		tileMap = new TileMap("terrain/" + name + "/tilemap", 8);
+		subcomp.add(heightMap = new Texture2D(0, "terrain/" + name + "/heightmap.tga", false));
+		subcomp.add(tileMap = new TileMap("terrain/" + name + "/tilemap", tiles));
 		
-		while(heightMap.loadPercent() != 1.0f)
+		while(heightMap.readyPercent() != 1.0f)
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {}
@@ -53,13 +55,13 @@ public class Terrain extends Object{
 		
 		loadTerrain();
 		calculateNormals();
-		//loadTiles();TODO Load Splatmap method.
+		//loadTiles(); TODO Load Splatmap method.
 		mesh.loadBuffers();
 		
 	}
 	
 	public void load() {
-		if (finished && !loaded) {
+		if (ready && !loaded) {
 			loadSegmentBuffers();
 			mesh.loadVBO();
 			loaded = true;
@@ -206,18 +208,7 @@ public class Terrain extends Object{
 		Shader.setProgram("");
 	}
 	
-	public float loadPercent() {
-		float f;
-		if (finished)
-			f = 1.0f;
-		else
-			f = 0.0f;
-		return (f + heightMap.loadPercent() + tileMap.loadPercent()) / 3;
-	}
-	
-	public boolean isLoaded() {
-		return loaded && heightMap.isLoaded() && tileMap.isLoaded();
-	}
+
 	
 	public void destroy() {
 		for (int i = 0; i < sId.length; i++) {

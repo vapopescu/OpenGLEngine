@@ -14,8 +14,9 @@ public class TileMap extends Material{
 	}
 	
 	protected void thread() {
-		diffuseMap = new TextureArray(0, path + "_d.tga", tiles, true);
-		normalMap = new TextureArray(1, path +  "_n.tga", tiles, false);
+		subcomp.add(diffuseMap = new TextureArray(0, path + "_d.tga", tiles, true));
+		subcomp.add(normalMap = new TextureArray(1, path +  "_n.tga", tiles, false));
+		ready = true;
 	}
 
 }

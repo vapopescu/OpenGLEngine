@@ -24,12 +24,13 @@ public class Model extends Object {
 
 	protected void thread() {
 		loadModel();
+		subcomp.add(material);
 		mesh.computeTangents();
 		mesh.loadBuffers();
 	}
 
 	public void load() {
-		if (finished && !loaded) {
+		if (ready && !loaded) {
 			mesh.loadVBO();
 			loaded = true;
 		}
@@ -171,19 +172,6 @@ public class Model extends Object {
 		mesh.render();
 		Texture.unbind();
 		Shader.setProgram("");
-	}
-
-	public float loadPercent() {
-		float f;
-		if (finished)
-			f = 1.0f;
-		else
-			f = 0.0f;
-		return (f + material.loadPercent()) / 2.0f;
-	}
-
-	public boolean isLoaded() {
-		return loaded && material.isLoaded();
 	}
 
 	public void destroy() {

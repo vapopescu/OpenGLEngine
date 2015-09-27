@@ -7,7 +7,7 @@ import com.utils.math.*;
  *
  */
 @SuppressWarnings("unused")
-public class Light {
+public class Light extends Loadable {
 	private int type = 0;
 	private Vector4f diffuseColor = new Vector4f(1, 1, 1, 1);
 	private Vector4f ambientColor = new Vector4f(0.1f, 0.1f, 0.1f, 1);
@@ -21,7 +21,11 @@ public class Light {
 	public static final int POINT = 1;
 	public static final int SPOT = 2;
 	
-	Light(int nType, float x, float y, float z) {
+	public Light() {
+		
+	}
+	
+	public Light(int nType, float x, float y, float z) {
 		type = nType;
 		translation.x = x;
 		translation.y = y;
@@ -35,6 +39,7 @@ public class Light {
 			translation.w = 1;
 			break;
 		}
+		startThread();
 	}
 	
 	public void setDiffuseColor(float red, float green, float blue, float alpha) {

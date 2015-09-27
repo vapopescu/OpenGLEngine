@@ -1,9 +1,14 @@
 package com;
 
+import java.util.*;
+
 public class Loadable {
-	protected boolean finished = false;
+	protected boolean ready = false;
 	protected boolean loaded = false;
 	protected int runPriority = 5; //Default priority.
+	protected ArrayList<Loadable> subcomp = new ArrayList<Loadable>();
+	
+	//TODO Revamp Loadable to use notifyAll() and wait() methods.
 	
 	private class Thread extends java.lang.Thread {
 		private Loadable obj;
@@ -17,7 +22,7 @@ public class Loadable {
 			synchronized(this) {
 				notifyAll();
 			}
-			obj.finished = true;
+			obj.ready = true;
 		}
 	}
 
@@ -26,7 +31,7 @@ public class Loadable {
 	}
 	
 	public void load() {
-		if(finished && !loaded)
+		if(ready && !loaded)
 			loaded = true;
 	}
 
@@ -36,14 +41,24 @@ public class Loadable {
 		loader.start();
 	}
 	
-	public float loadPercent() {
-		if (finished)
+	public float selfReady() {
+		if (ready)
 			return 1.0f;
 		else
 			return 0.0f;
 	}
 	
+	public float readyPercent() {
+		float f = 0;
+		for (int i = 0; i < subcomp.size(); i++)
+			f += subcomp.get(i).readyPercent();
+		return (selfReady() + f) / (subcomp.size() + 1);
+	}
+	
 	public boolean isLoaded() {
-		return loaded;
+		boolean ok = true;
+		for (int i = 0; i < subcomp.size(); i++)
+				ok = ok && subcomp.get(i).isLoaded();
+		return loaded && ok;
 	}
 }

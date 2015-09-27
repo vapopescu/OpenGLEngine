@@ -30,7 +30,7 @@ public class Texture2D extends Texture {
 	}
 
 	public void load() {
-		if (finished && !loaded) {
+		if (ready && !loaded) {
 			initializeTex();
 			loaded = true;
 		}
