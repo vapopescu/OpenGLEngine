@@ -27,7 +27,7 @@ public class Terrain extends Object{
 	private Mesh mesh = new Mesh();
 	private Texture2D heightMap = new Texture2D();
 	private TileMap tileMap = new TileMap();
-	//private Texture2D[] splatMap = new Texture2D[tiles];
+	private Texture2D[] splatMap = new Texture2D[0];
 	
 	public Terrain() {
 		
@@ -35,17 +35,27 @@ public class Terrain extends Object{
 	
 	public Terrain(String name) {
 		this.name = name;
+		splatMap = new Texture2D[(tiles / 4) + (tiles % 4 == 0 ? 0 : 1)];
+		for (int i = 0; i < splatMap.length; i++)
+			splatMap[i] = new Texture2D();
 		startThread();
 	}
 
 	protected void thread() {
 		subcomp.add(heightMap = new Texture2D(0, "terrain/" + name + "/heightmap.tga", false));
 		subcomp.add(tileMap = new TileMap("terrain/" + name + "/tilemap", tiles));
+		for (int i = 0; i < splatMap.length; i++)
+			subcomp.add(splatMap[i] = new Texture2D(2 + i, "terrain/" + name + "/splat" + i +".tga", false));
 		
-		while(heightMap.readyPercent() != 1.0f)
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {}
+		synchronized (heightMap) {
+			while (heightMap.selfReady() != 1) {
+				try {
+					heightMap.wait(100);
+				} catch (InterruptedException e) {
+					
+				}
+			}
+		}
 		
 		width = (heightMap.getWidth() - 1);
 		height = (heightMap.getHeight() - 1);
@@ -55,9 +65,7 @@ public class Terrain extends Object{
 		
 		loadTerrain();
 		calculateNormals();
-		//loadTiles(); TODO Load Splatmap method.
 		mesh.loadBuffers();
-		
 	}
 	
 	public void load() {
@@ -68,6 +76,9 @@ public class Terrain extends Object{
 		}
 		heightMap.load();
 		tileMap.load();
+		for (int i = 0; i < splatMap.length; i++) {
+			splatMap[i].load();
+		}
 	}
 	
 	private void loadTerrain() {
@@ -175,10 +186,12 @@ public class Terrain extends Object{
 		calculateModelMatrix();
 		calculateNormalMatrix();
 		Shader.setMNMatrices(modelMatrix, normalMatrix);
+		Shader.setTerrain(width / def, height / def, tiles);
 		
 		Shader.setProgram("Terrain");
 		tileMap.bind();
-		//heightMap.bind();
+		for (int i = 0; i < splatMap.length; i++)
+			splatMap[i].bind();
 
 		// Bind to the VAO that has all the information about the vertices
 		glBindVertexArray(mesh.vaoId);
@@ -208,8 +221,6 @@ public class Terrain extends Object{
 		Shader.setProgram("");
 	}
 	
-
-	
 	public void destroy() {
 		for (int i = 0; i < sId.length; i++) {
 			glDeleteBuffers(sId[i]);
@@ -218,5 +229,7 @@ public class Terrain extends Object{
 		tileMap.destroy();
 		mesh.destroy();
 		heightMap.destroy();
+		for (int i = 0; i < splatMap.length; i++)
+			splatMap[i].destroy();
 	}
 }

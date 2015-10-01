@@ -83,6 +83,7 @@ public class Matrix4f {
 	}
 	
 	public void store(FloatBuffer buf) {
+		buf.clear();
 		buf.put(m00);
 		buf.put(m01);
 		buf.put(m02);
@@ -99,6 +100,7 @@ public class Matrix4f {
 		buf.put(m31);
 		buf.put(m32);
 		buf.put(m33);
+		buf.flip();
 	}
 	
 	public static void multiply(Matrix4f left, Matrix4f right, Matrix4f dest) {

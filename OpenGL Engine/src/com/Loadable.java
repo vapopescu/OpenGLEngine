@@ -8,8 +8,6 @@ public class Loadable {
 	protected int runPriority = 5; //Default priority.
 	protected ArrayList<Loadable> subcomp = new ArrayList<Loadable>();
 	
-	//TODO Revamp Loadable to use notifyAll() and wait() methods.
-	
 	private class Thread extends java.lang.Thread {
 		private Loadable obj;
 		
@@ -18,11 +16,11 @@ public class Loadable {
 		}
 		
 		public void run() {
-			obj.thread();
-			synchronized(this) {
-				notifyAll();
+			synchronized (obj) {
+				obj.thread();
+				obj.notifyAll();
+				obj.ready = true;
 			}
-			obj.ready = true;
 		}
 	}
 

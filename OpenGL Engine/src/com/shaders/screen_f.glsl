@@ -5,15 +5,29 @@ in vec2 texCoord;
 
 out vec4 outputColor;
 
-uniform sampler2D depthTex;
-uniform sampler2D diffuseTex;
-uniform sampler2D normalTex;
+uniform sampler2DMS depthTex;
+uniform sampler2DMS diffuseTex;
+uniform sampler2DMS normalTex;
 
 void main(void) {
-	vec4 textureColor = texture2D(diffuseTex, texCoord);
-	float depth = pow(texture2D(depthTex, texCoord).x, 150f);
+	ivec2 pixel = ivec2(texCoord * textureSize(diffuseTex));
+	vec4 textureColor = (texelFetch(diffuseTex, pixel, 0) + 
+		texelFetch(diffuseTex, pixel, 1) +
+		texelFetch(diffuseTex, pixel, 2) +
+		texelFetch(diffuseTex, pixel, 3)) / 4.0f;
+		
+	vec4 normalColor = (texelFetch(normalTex, pixel, 0) + 
+		texelFetch(normalTex, pixel, 1) +
+		texelFetch(normalTex, pixel, 2) +
+		texelFetch(normalTex, pixel, 3)) / 4.0f;
+		
+	float depth = pow((texelFetch(depthTex, pixel, 0).x + 
+		texelFetch(depthTex, pixel, 1).x +
+		texelFetch(depthTex, pixel, 2).x +
+		texelFetch(depthTex, pixel, 3).x) / 4.0f, 10f);
 	
 	outputColor = pow(textureColor, vec4(1.0f / 2.2f));
-	//outputColor = mix(outputColor, vec4(fogColor,1), depth);
+	//outputColor = normalColor;
+	//outputColor = vec4(vec3(depth), 1);
 	//outputColor = texture2D(posTex, texCoord);
  }

@@ -22,12 +22,14 @@ import com.utils.*;
 public class Screen extends Object {
 	
 	protected int fbo = 0;
+	protected int fboAux = 0;
 	protected int width = 0;
 	protected int height = 0;
 	protected IntBuffer drawBuffers = null;
-	protected Texture tId[] = null;
+	protected Texture[] tId = null;
+	protected Texture[] tIdAux = null;
 	protected float[] clearColor = {0, 0, 0};
-
+	
 	public Screen() {
 		name = "Screen";
 		width = Settings.getWidth();
@@ -62,15 +64,24 @@ public class Screen extends Object {
 		fbo = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		
-		tId = new TextureFBO[3];
-		tId[0] = new TextureFBO(0, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT);
-		tId[1] = new TextureFBO(1, GL_COLOR_ATTACHMENT0, GL_RGB);
-		tId[2] = new TextureFBO(2, GL_COLOR_ATTACHMENT1, GL_RGB);
+		tId = new TextureMS[3];
+		tId[0] = new TextureMS(0, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT);
+		tId[1] = new TextureMS(1, GL_COLOR_ATTACHMENT0, GL_RGB);
+		tId[2] = new TextureMS(2, GL_COLOR_ATTACHMENT1, GL_RGB);
 		drawBuffers = BufferUtils.createIntBuffer(tId.length);
 		for(int i = 0; i < tId.length - 1; i++) {
 			drawBuffers.put(GL_COLOR_ATTACHMENT0 + i);
 		}
 		drawBuffers.flip();
+		glDrawBuffers(drawBuffers);
+		
+		fboAux = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboAux);
+		
+		tIdAux = new TextureMS[3];
+		tIdAux[0] = new TextureMS(0, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT);
+		tIdAux[1] = new TextureMS(1, GL_COLOR_ATTACHMENT0, GL_RGB);
+		tIdAux[2] = new TextureMS(2, GL_COLOR_ATTACHMENT1, GL_RGB);
 		glDrawBuffers(drawBuffers);
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -90,17 +101,56 @@ public class Screen extends Object {
 		Shader.setProgram("");
 	}
 	
-	public void drawTo() {
+	public void makeActive() {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glViewport(0, 0, width, height);
 		glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	
-	protected void setClearColor(float r, float g, float b) {
-		clearColor[0] = r;
-		clearColor[1] = g;
-		clearColor[2] = b;
+	public void drawTo(Screen screen) {
+		screen.makeActive();
+		render();
+	}
+	
+	public void drawTo() {
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, width, height);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		render();
+	}
+	
+	public void applyFilter(String filter) {
+		glBindFramebuffer(GL_FRAMEBUFFER, fboAux);
+		glViewport(0, 0, width, height);
+		glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		Shader.setProgram(filter);
+		
+		// Bind the textures
+		for(int i = 0; i < tId.length; i++) {
+			tId[i].bind();
+		}
+
+		mesh.render();
+		
+		Texture.unbind();
+		Shader.setProgram("");
+		
+		int aux1;
+		aux1 = fbo;
+		fbo = fboAux;
+		fboAux = aux1;
+		
+		Texture[] aux2;
+		aux2 = tId;
+		tId = tIdAux;
+		tIdAux = aux2;
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, fboAux);
 	}
 	
 	public void printScreen(int index) {
@@ -219,6 +269,12 @@ public class Screen extends Object {
 		}
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	
+	protected void setClearColor(float r, float g, float b) {
+		clearColor[0] = r;
+		clearColor[1] = g;
+		clearColor[2] = b;
 	}
 	
 	public void destroy(){

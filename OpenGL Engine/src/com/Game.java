@@ -7,8 +7,7 @@ import com.shaders.*;
 import com.utils.math.*;
 
 public class Game extends Loadable {
-	Screen window = new Screen();
-	ScreenMS screen = new ScreenMS();
+	Screen screen = new Screen();
 	Camera camera = new Camera();
 	Model m1 = new Model();
 	Model m2 = new Model();
@@ -20,8 +19,7 @@ public class Game extends Loadable {
 	}
 
 	protected void thread() {
-		window = new Screen(1.0f, 0.3f, 0.3f);
-		subcomp.add(screen = new ScreenMS(0.3f, 0.3f, 1.0f));
+		subcomp.add(screen = new Screen(0.3f, 0.3f, 1.0f));
 		subcomp.add(camera);
 		subcomp.add(m1 = new Model("Sphere"));
 		subcomp.add(m2 = new Model("Ground"));
@@ -57,13 +55,15 @@ public class Game extends Loadable {
 		
 		//TODO Simplify Frame buffer control.
 		//window.drawTo();
-		screen.drawTo();
+		screen.makeActive();
 		m1.render();
 		//m2.render();
 		terrain.render();
 		
-		window.drawTo();
-		screen.render();
+		//screen.applyFilter("BlurX");
+		//screen.applyFilter("BlurY");
+		
+		screen.drawTo();
 	}
 	
 	public void destroy() {

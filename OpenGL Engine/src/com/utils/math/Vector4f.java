@@ -25,10 +25,12 @@ public class Vector4f extends Vector3f {
 	}
 	
 	public void store(FloatBuffer buf) {
+		buf.clear();
 		buf.put(x);
 		buf.put(y);
 		buf.put(z);
 		buf.put(w);
+		buf.flip();
 	}
 	
 	public static void multiply(Matrix4f left, Vector4f right, Vector4f dest) {

@@ -22,9 +22,9 @@ public class Shader {
 	private String name;
 	protected int pId = 0;
 
-	private FloatBuffer matrix4fBuffer = BufferUtils.createFloatBuffer(16);
-	private FloatBuffer vector3fBuffer = BufferUtils.createFloatBuffer(3);
-	private FloatBuffer vector4fBuffer = BufferUtils.createFloatBuffer(4);
+	private FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(16);
+	/*private FloatBuffer vector3fBuffer = BufferUtils.createFloatBuffer(3);
+	private FloatBuffer vector4fBuffer = BufferUtils.createFloatBuffer(4);*/
 
 	private Shader(String name, String vsLoc, String fsLoc) {
 		this.name = name;
@@ -39,14 +39,7 @@ public class Shader {
 				setUniformTex("normalTex", 1);
 			}
 		});
-		/*shList.add(new Shader("Screen", "screen_v.glsl", "screen_f.glsl") {
-			protected void setUniforms() {
-				setUniformTex("depthTex", 0);
-				setUniformTex("diffuseTex", 1);
-				setUniformTex("normalTex", 2);
-			}
-		});*/
-		shList.add(new Shader("ScreenMS", "screen_v.glsl", "screenMS.glsl") {
+		shList.add(new Shader("Screen", "screen_v.glsl", "screen_f.glsl") {
 			protected void setUniforms() {
 				setUniformTex("depthTex", 0);
 				setUniformTex("diffuseTex", 1);
@@ -57,6 +50,17 @@ public class Shader {
 			protected void setUniforms() {
 				setUniformTex("diffuseTex", 0);
 				setUniformTex("normalTex", 1);
+				setUniformTerrainTex("splatTex", 8, 2);
+			}
+		});
+		shList.add(new Shader("BlurX", "screen_v.glsl", "blur9X.glsl") {
+			protected void setUniforms() {
+				setUniformTex("depthTex", 0);
+			}
+		});
+		shList.add(new Shader("BlurY", "screen_v.glsl", "blur9Y.glsl") {
+			protected void setUniforms() {
+				setUniformTex("depthTex", 0);
 			}
 		});
 	}
@@ -182,33 +186,48 @@ public class Shader {
 		getShader("Terrain").setUniformVector4f("lightPosition", nLightPosition);
 	}
 
+	public static void setTerrain(float x, float y, float z) {
+		getShader("Terrain").setVector2f("terrainSize", x, y, z);
+	}
+	
 	private void setUniformMatrix4f(String name, Matrix4f matrix) {
 		glUseProgram(pId);
-		matrix.store(matrix4fBuffer);
-		matrix4fBuffer.flip();
-		glUniformMatrix4(glGetUniformLocation(pId, name), false, matrix4fBuffer);
+		matrix.store(floatBuffer);
+		glUniformMatrix4(glGetUniformLocation(pId, name), false, floatBuffer);
 		glUseProgram(setId);
 	}
-
+	
+	protected void setVector2f(String name, float x, float y, float z) {
+		glUseProgram(pId);
+		glUniform3f(glGetUniformLocation(pId, name), x, y, z);
+		glUseProgram(setId);
+	}
+	
 	private void setUniformVector3f(String name, Vector3f vector) {
 		glUseProgram(pId);
-		vector.store(vector3fBuffer);
-		vector3fBuffer.flip();
-		glUniform3(glGetUniformLocation(pId, name), vector3fBuffer);
+		vector.store(floatBuffer);
+		glUniform3(glGetUniformLocation(pId, name), floatBuffer);
 		glUseProgram(setId);
 	}
 
 	private void setUniformVector4f(String name, Vector3f vector) {
 		glUseProgram(pId);
-		vector.store(vector4fBuffer);
-		vector4fBuffer.flip();
-		glUniform4(glGetUniformLocation(pId, name), vector4fBuffer);
+		vector.store(floatBuffer);
+		glUniform4(glGetUniformLocation(pId, name), floatBuffer);
 		glUseProgram(setId);
 	}
-
+	
 	protected void setUniformTex(String name, int n) {
 		glUseProgram(pId);
 		glUniform1i(glGetUniformLocation(pId, name), n);
+		glUseProgram(setId);
+	}
+	
+	protected void setUniformTerrainTex(String name,int tiles, int n) {
+		glUseProgram(pId);
+		int loc = glGetUniformLocation(pId, name);
+		for (int i = 0; i < tiles; i++)
+			glUniform1i(loc + i, n + i);
 		glUseProgram(setId);
 	}
 

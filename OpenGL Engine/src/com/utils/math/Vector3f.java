@@ -76,8 +76,10 @@ public class Vector3f {
 	}
 	
 	public void store(FloatBuffer buf) {
+		buf.clear();
 		buf.put(x);
 		buf.put(y);
 		buf.put(z);
+		buf.flip();
 	}
 }
