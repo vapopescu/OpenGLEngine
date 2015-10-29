@@ -49,6 +49,9 @@ public class Window {
 		glfwWindowHint(GLFW_DECORATED, GL_TRUE);
 		glfwWindowHint(GLFW_SAMPLES, Settings.getSamples());
 		
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		
 		int width = Settings.getWidth();
 		int height = Settings.getHeight();
 		

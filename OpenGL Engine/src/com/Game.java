@@ -13,13 +13,15 @@ public class Game extends Loadable {
 	Model m2 = new Model();
 	Terrain terrain = new Terrain();
 	Light light = new Light();
-
+	PostFilter filter = new PostFilter();
+	
 	public Game() {
 		startThread();
 	}
 
 	protected void thread() {
 		subcomp.add(screen = new Screen(0.3f, 0.3f, 1.0f));
+		subcomp.add(filter);
 		subcomp.add(camera);
 		subcomp.add(m1 = new Model("Sphere"));
 		subcomp.add(m2 = new Model("Ground"));
@@ -33,13 +35,10 @@ public class Game extends Loadable {
 		glClearColor(f, f, f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		screen.load();
-		camera.load();
-		m1.load();
-		m2.load();
-		terrain.load();
-		light.load();
-		loaded = true;
+		if(ready && !loaded) {
+			loaded = true;
+		}
+		loadSubcomp();
 	}
 	
 	public void render() {
@@ -53,24 +52,20 @@ public class Game extends Loadable {
 		Shader.setVPMatrices(viewMatrix, projectionMatrix);
 		Shader.setLight(diffuseColor, ambientColor, specularColor, lightPosition);
 		
-		//TODO Simplify Frame buffer control.
-		//window.drawTo();
 		screen.makeActive();
 		m1.render();
 		//m2.render();
 		terrain.render();
 		
-		//screen.applyFilter("BlurX");
-		//screen.applyFilter("BlurY");
-		
-		screen.drawTo();
+		screen.drawTo(filter);
+		//filter.apply("BlurX");
+		//filter.apply("BlurY");
+		filter.drawTo();
 	}
 	
 	public void destroy() {
-		m1.destroy();
-		m2.destroy();
-		screen.destroy();
-		terrain.destroy();
+		for (int i = 0; i < subcomp.size(); i++)
+			subcomp.get(i).destroy();
 		Shader.destroyShaders();
 	}
 }

@@ -31,6 +31,12 @@ public class Loadable {
 	public void load() {
 		if(ready && !loaded)
 			loaded = true;
+		loadSubcomp();
+	}
+	
+	protected void loadSubcomp() {
+		for (int i = 0; i < subcomp.size(); i++)
+			subcomp.get(i).load();
 	}
 
 	protected void startThread() {
@@ -58,5 +64,14 @@ public class Loadable {
 		for (int i = 0; i < subcomp.size(); i++)
 				ok = ok && subcomp.get(i).isLoaded();
 		return loaded && ok;
+	}
+	
+	public void destroySubcomp() {
+		for (int i = 0; i < subcomp.size(); i++)
+			subcomp.get(i).destroy();
+	}
+	
+	public void destroy() {
+		
 	}
 }

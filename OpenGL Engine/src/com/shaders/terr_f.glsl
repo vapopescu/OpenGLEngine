@@ -26,12 +26,76 @@ void main(void) {
 	float weight[32];
 	int splats = (tiles / 4) + ((tiles % 4) == 0 ? 0 : 1);
 	
-	for (int i = 0; i < splats; i++) {
-		vec4 splat = texture2D(splatTex[i], texCoord / terrainSize.xy);
-		weight[i * 4 + 0] = splat.r;
-		weight[i * 4 + 1] = splat.g;
-		weight[i * 4 + 2] = splat.b;
-		weight[i * 4 + 3] = splat.a;
+	/*for (int i = 0; i < splats; i++) {
+		vec4 splat = texture2D(splatTex[0], texCoord / terrainSize.xy);
+		weight[4 * i + 0] = splat.r;
+		weight[4 * i + 1] = splat.g;
+		weight[4 * i + 2] = splat.b;
+		weight[4 * i + 3] = splat.a;
+		}*/
+	
+	if (0 < splats) {
+		vec4 splat = texture2D(splatTex[0], texCoord / terrainSize.xy);
+		weight[0] = splat.r;
+		weight[1] = splat.g;
+		weight[2] = splat.b;
+		weight[3] = splat.a;
+		}
+		
+	if (1 < splats) {
+		vec4 splat = texture2D(splatTex[1], texCoord / terrainSize.xy);
+		weight[4] = splat.r;
+		weight[5] = splat.g;
+		weight[6] = splat.b;
+		weight[7] = splat.a;
+		}
+		
+	if (2 < splats) {
+		vec4 splat = texture2D(splatTex[2], texCoord / terrainSize.xy);
+		weight[8] = splat.r;
+		weight[9] = splat.g;
+		weight[10] = splat.b;
+		weight[11] = splat.a;
+		}
+		
+	if (3 < splats) {
+		vec4 splat = texture2D(splatTex[3], texCoord / terrainSize.xy);
+		weight[12] = splat.r;
+		weight[13] = splat.g;
+		weight[14] = splat.b;
+		weight[15] = splat.a;
+		}
+		
+	if (4 < splats) {
+		vec4 splat = texture2D(splatTex[4], texCoord / terrainSize.xy);
+		weight[16] = splat.r;
+		weight[17] = splat.g;
+		weight[18] = splat.b;
+		weight[19] = splat.a;
+		}
+		
+	if (5 < splats) {
+		vec4 splat = texture2D(splatTex[5], texCoord / terrainSize.xy);
+		weight[20] = splat.r;
+		weight[21] = splat.g;
+		weight[22] = splat.b;
+		weight[23] = splat.a;
+		}
+		
+	if (6 < splats) {
+		vec4 splat = texture2D(splatTex[6], texCoord / terrainSize.xy);
+		weight[24] = splat.r;
+		weight[25] = splat.g;
+		weight[26] = splat.b;
+		weight[27] = splat.a;
+		}
+		
+	if (7 < splats) {
+		vec4 splat = texture2D(splatTex[7], texCoord / terrainSize.xy);
+		weight[28] = splat.r;
+		weight[29] = splat.g;
+		weight[30] = splat.b;
+		weight[31] = splat.a;
 		}
 	
 	outputColor = vec4(0, 0, 0, 0);
@@ -49,6 +113,8 @@ void main(void) {
 		outputColor /= outputColor.a;
 		outputNormal /= outputNormal.a;
 	}
+	
+	//outputColor = texture2D(splatTex[0], texCoord / terrainSize.xy);
 	
 	vec3 N = normal;
     vec3 T = normalize(tangent - N * dot(tangent, N));

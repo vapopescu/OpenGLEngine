@@ -62,7 +62,7 @@ public class Model extends Object {
 				Element meshNode = (Element) modelNode.getElementsByTagName("mesh").item(0);
 				StringTokenizer tok, tok2;
 
-				// displayName = modelNode.getAttribute("name").trim();
+				//displayName = modelNode.getAttribute("name").trim();
 
 				Element vertexNode = (Element) meshNode.getElementsByTagName("vertex").item(0);
 				int vertexCount = Integer.parseInt(vertexNode.getAttribute("count"));

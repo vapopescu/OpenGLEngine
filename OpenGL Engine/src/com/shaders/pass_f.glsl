@@ -1,4 +1,4 @@
-#version 330 
+#version 130 
 
 in vec4 color;
 in vec2 texCoord;
@@ -7,8 +7,8 @@ in vec3 tangent;
 in vec3 bitangent;
 in vec4 eyePosition;
 
-layout (location = 0) out vec4 outputColor;
-layout (location = 1) out vec4 outputNormal;
+out vec4 outputColor;
+out vec4 outputNormal;
 
 uniform sampler2D diffuseTex;
 uniform sampler2D normalTex;

@@ -22,12 +22,10 @@ import com.utils.*;
 public class Screen extends Object {
 	
 	protected int fbo = 0;
-	protected int fboAux = 0;
 	protected int width = 0;
 	protected int height = 0;
 	protected IntBuffer drawBuffers = null;
 	protected Texture[] tId = null;
-	protected Texture[] tIdAux = null;
 	protected float[] clearColor = {0, 0, 0};
 	
 	public Screen() {
@@ -75,20 +73,11 @@ public class Screen extends Object {
 		drawBuffers.flip();
 		glDrawBuffers(drawBuffers);
 		
-		fboAux = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboAux);
-		
-		tIdAux = new TextureMS[3];
-		tIdAux[0] = new TextureMS(0, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT);
-		tIdAux[1] = new TextureMS(1, GL_COLOR_ATTACHMENT0, GL_RGB);
-		tIdAux[2] = new TextureMS(2, GL_COLOR_ATTACHMENT1, GL_RGB);
-		glDrawBuffers(drawBuffers);
-		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	
-	public void render() {
-		Shader.setProgram("Screen");
+	protected void render(String shader) {
+		Shader.setProgram(shader);
 		
 		// Bind the textures
 		for(int i = 0; i < tId.length; i++) {
@@ -110,7 +99,8 @@ public class Screen extends Object {
 	
 	public void drawTo(Screen screen) {
 		screen.makeActive();
-		render();
+		
+		render("ScreenMS");
 	}
 	
 	public void drawTo() {
@@ -119,38 +109,7 @@ public class Screen extends Object {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		render();
-	}
-	
-	public void applyFilter(String filter) {
-		glBindFramebuffer(GL_FRAMEBUFFER, fboAux);
-		glViewport(0, 0, width, height);
-		glClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		Shader.setProgram(filter);
-		
-		// Bind the textures
-		for(int i = 0; i < tId.length; i++) {
-			tId[i].bind();
-		}
-
-		mesh.render();
-		
-		Texture.unbind();
-		Shader.setProgram("");
-		
-		int aux1;
-		aux1 = fbo;
-		fbo = fboAux;
-		fboAux = aux1;
-		
-		Texture[] aux2;
-		aux2 = tId;
-		tId = tIdAux;
-		tIdAux = aux2;
-		
-		glBindFramebuffer(GL_FRAMEBUFFER, fboAux);
+		render("ScreenMS");
 	}
 	
 	public void printScreen(int index) {

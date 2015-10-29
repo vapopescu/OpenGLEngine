@@ -39,11 +39,16 @@ public class Shader {
 				setUniformTex("normalTex", 1);
 			}
 		});
-		shList.add(new Shader("Screen", "screen_v.glsl", "screen_f.glsl") {
+		shList.add(new Shader("ScreenMS", "screen_v.glsl", "screenMS_f.glsl") {
 			protected void setUniforms() {
 				setUniformTex("depthTex", 0);
 				setUniformTex("diffuseTex", 1);
 				setUniformTex("normalTex", 2);
+			}
+		});
+		shList.add(new Shader("Screen", "screen_v.glsl", "screen_f.glsl") {
+			protected void setUniforms() {
+				setUniformTex("diffuseTex", 1);
 			}
 		});
 		shList.add(new Shader("Terrain", "terr_v.glsl", "terr_f.glsl") {
@@ -55,12 +60,12 @@ public class Shader {
 		});
 		shList.add(new Shader("BlurX", "screen_v.glsl", "blur9X.glsl") {
 			protected void setUniforms() {
-				setUniformTex("depthTex", 0);
+				setUniformTex("diffuseTex", 1);
 			}
 		});
 		shList.add(new Shader("BlurY", "screen_v.glsl", "blur9Y.glsl") {
 			protected void setUniforms() {
-				setUniformTex("depthTex", 0);
+				setUniformTex("diffuseTex", 1);
 			}
 		});
 	}
@@ -241,8 +246,10 @@ public class Shader {
 		Shader sh = getShader(name);
 		if (sh != null)
 			setId = sh.pId;
-		else
+		else {
+			System.err.println("Shader \"" + name + "\" not found!");
 			setId = 0;
+		}
 
 		glUseProgram(setId);
 	}
