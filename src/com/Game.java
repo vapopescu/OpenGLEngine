@@ -1,12 +1,14 @@
 package com;
 
-import static org.lwjgl.opengl.GL11.*;
+import com.objects.Model;
+import com.objects.PostFilter;
+import com.objects.Screen;
+import com.objects.Terrain;
+import com.shaders.Shader;
+import com.utils.math.Matrix4f;
+import com.utils.math.Vector4f;
 
-import com.objects.*;
-import com.shaders.*;
-import com.utils.math.*;
-
-public class Game extends Loadable {
+public class Game extends com.Object {
 	Screen screen = new Screen();
 	Camera camera = new Camera();
 	Model m1 = new Model();
@@ -20,25 +22,14 @@ public class Game extends Loadable {
 	}
 
 	protected void thread() {
-		subcomp.add(screen = new Screen(0.3f, 0.3f, 1.0f));
-		subcomp.add(filter);
-		subcomp.add(camera);
-		subcomp.add(m1 = new Model("Sphere"));
-		subcomp.add(m2 = new Model("Ground"));
-		subcomp.add(terrain = new Terrain("Pit"));
-		subcomp.add(light = new Light(Light.DIRECT, 10, 10, 10));
+		child.add(screen = new Screen(0.3f, 0.3f, 1.0f));
+		child.add(filter);
+		child.add(camera);
+		child.add(m1 = new Model("Sphere"));
+		child.add(m2 = new Model("Ground"));
+		child.add(terrain = new Terrain("Pit"));
+		child.add(light = new Light(Light.DIRECT, 10, 10, 10));
 		ready = true;
-	}
-	
-	public void load() {
-		float f = readyPercent();
-		glClearColor(f, f, f, 1);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		if(ready && !loaded) {
-			loaded = true;
-		}
-		loadSubcomp();
 	}
 	
 	public void render() {
@@ -64,8 +55,8 @@ public class Game extends Loadable {
 	}
 	
 	public void destroy() {
-		for (int i = 0; i < subcomp.size(); i++)
-			subcomp.get(i).destroy();
+		for (int i = 0; i < child.size(); i++)
+			child.get(i).destroy();
 		Shader.destroyShaders();
 	}
 }

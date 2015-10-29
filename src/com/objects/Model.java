@@ -11,7 +11,7 @@ import com.objects.textures.*;
 import com.shaders.*;
 import com.utils.math.*;
 
-public class Model extends Object {
+public class Model extends Entity {
 
 	public Model() {
 
@@ -24,7 +24,7 @@ public class Model extends Object {
 
 	protected void thread() {
 		loadModel();
-		subcomp.add(material);
+		child.add(material);
 		mesh.computeTangents();
 		mesh.loadBuffers();
 	}

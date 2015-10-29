@@ -19,7 +19,7 @@ import com.utils.*;
  * @author Vlad
  *
  */
-public class Screen extends Object {
+public class Screen extends Entity {
 	
 	protected int fbo = 0;
 	protected int width = 0;

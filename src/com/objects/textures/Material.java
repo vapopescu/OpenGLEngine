@@ -1,8 +1,6 @@
 package com.objects.textures;
 
-import com.*;
-
-public class Material extends Loadable{
+public class Material extends com.Object{
 	protected String path;
 	protected Texture diffuseMap = new Texture();
 	protected Texture normalMap = new Texture();
@@ -17,8 +15,8 @@ public class Material extends Loadable{
 	}
 
 	protected void thread() {
-		subcomp.add(diffuseMap = new Texture2D(0, path + "_d.tga", true));
-		subcomp.add(normalMap = new Texture2D(1, path + "_n.tga", false));
+		child.add(diffuseMap = new Texture2D(0, path + "_d.tga", true));
+		child.add(normalMap = new Texture2D(1, path + "_n.tga", false));
 		ready = true;
 	}
 	

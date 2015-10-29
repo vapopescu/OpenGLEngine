@@ -15,7 +15,7 @@ import com.shaders.*;
 import com.utils.math.*;
 
 
-public class Terrain extends Object{
+public class Terrain extends Entity{
 	
 	private int width = 0, height = 0;
 	private float lenXY = 1;
@@ -42,13 +42,13 @@ public class Terrain extends Object{
 	}
 
 	protected void thread() {
-		subcomp.add(heightMap = new Texture2D(0, "terrain/" + name + "/heightmap.tga", false));
-		subcomp.add(tileMap = new TileMap("terrain/" + name + "/tilemap", tiles));
+		child.add(heightMap = new Texture2D(0, "terrain/" + name + "/heightmap.tga", false));
+		child.add(tileMap = new TileMap("terrain/" + name + "/tilemap", tiles));
 		for (int i = 0; i < splatMap.length; i++)
-			subcomp.add(splatMap[i] = new Texture2D(2 + i, "terrain/" + name + "/splat" + i +".tga", false));
+			child.add(splatMap[i] = new Texture2D(2 + i, "terrain/" + name + "/splat" + i +".tga", false));
 		
 		synchronized (heightMap) {
-			while (heightMap.selfReady() != 1) {
+			while (!heightMap.ready()) {
 				try {
 					heightMap.wait(100);
 				} catch (InterruptedException e) {

@@ -88,8 +88,13 @@ public class Window {
 	}
 
 	private void loop() {
-		while (!game.isLoaded()) {
+		while (!game.loadedAll()) {
+			float f = Object.readyPercent();
+			glClearColor(f, f, f, 1);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			
 			game.load();
+			
 			glfwSwapBuffers(window);
 		}
 

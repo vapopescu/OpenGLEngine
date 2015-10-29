@@ -1,5 +1,9 @@
-/OpenGL Engine.jar
-/jar/
-/native/
+/bin/
 /data/
 /doc/
+/jar/
+/native/
+/OpenGL Engine.jar
+/message.txt
+/*.sw*
+/.*.sw*

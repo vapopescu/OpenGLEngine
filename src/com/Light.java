@@ -7,7 +7,7 @@ import com.utils.math.*;
  *
  */
 @SuppressWarnings("unused")
-public class Light extends Loadable {
+public class Light extends Object {
 	private int type = 0;
 	private Vector4f diffuseColor = new Vector4f(1, 1, 1, 1);
 	private Vector4f ambientColor = new Vector4f(0.1f, 0.1f, 0.1f, 1);

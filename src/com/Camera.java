@@ -6,7 +6,7 @@ import com.utils.math.*;
  * @author Vlad
  *
  */
-public class Camera extends Loadable {
+public class Camera extends com.Object {
 	private Vector3f pivot = null;
 	private Vector3f rotation = null;
 	private Vector3f strafe = null;
