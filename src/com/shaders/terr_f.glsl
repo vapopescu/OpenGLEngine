@@ -7,9 +7,8 @@ in vec3 tangent;
 in vec3 bitangent;
 in vec4 eyePosition;
 
-layout (location = 0) out vec4 outputColor;
-layout (location = 1) out vec4 outputNormal;
-layout (location = 2) out vec4 outputDepth;
+out vec4 outputColor;
+out vec4 outputNormal;
 
 uniform sampler2DArray diffuseTex;
 uniform sampler2DArray normalTex;

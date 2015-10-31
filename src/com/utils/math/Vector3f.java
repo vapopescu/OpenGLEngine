@@ -11,10 +11,10 @@ public class Vector3f {
 		z = 0;
 	}
 	
-	public Vector3f(float nx, float ny, float nz) {
-		x = nx;
-		y = ny;
-		z = nz;
+	public Vector3f(float x, float y, float z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 	
 	public Vector3f(Vector3f v) {
@@ -57,16 +57,15 @@ public class Vector3f {
 	}
 	
 	public float length() {
-		return x * x + y * y + z * z;
+		return (float) Math.sqrt(x * x + y * y + z * z);
 	}
 	
 	public void normalize() {
 		float length = length();
         if (length != 1f && length != 0f){
-            length = (float) (1.0f / Math.sqrt(length));
-            x *= length;
-            y *= length;
-            z *= length;
+            x /= length;
+            y /= length;
+            z /= length;
         }
 		
 	}

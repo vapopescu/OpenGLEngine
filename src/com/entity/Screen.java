@@ -1,4 +1,4 @@
-package com.objects;
+package com.entity;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
@@ -11,7 +11,7 @@ import java.nio.*;
 import org.lwjgl.*;
 
 import com.*;
-import com.objects.textures.*;
+import com.entity.texture.*;
 import com.shaders.*;
 import com.utils.*;
 

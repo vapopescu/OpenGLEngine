@@ -89,28 +89,11 @@ public class Camera extends com.Object {
 		viewMatrix.m22 = 0.0f;
 		
 		Matrix4f.translate((Vector3f)strafe.negate(), viewMatrix, viewMatrix);
-		Matrix4f.rotate(rotation.y, new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate(rotation.x, new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate(rotation.z, new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
+		Quaternion q = Quaternion.euler(rotation.x, rotation.y, rotation.z, "YXZ");
+		Matrix4f.multiply(viewMatrix, q.toMatrix(), viewMatrix);
 		Matrix4f.translate((Vector3f)pivot.negate(), viewMatrix, viewMatrix);
 		
 		return viewMatrix;
-	}
-	
-	public static Matrix4f getLightMatrix() {
-		Matrix4f cameraMatrix = new Matrix4f();
-		Vector3f rotation = Camera.activeCamera.rotation;
-		
-		cameraMatrix.m11 = 0.0f;
-		cameraMatrix.m12 = -1.0f;
-		cameraMatrix.m21 = 1.0f;
-		cameraMatrix.m22 = 0.0f;
-		
-		Matrix4f.rotate(rotation.y, new Vector3f(0, 1, 0), cameraMatrix, cameraMatrix);
-		Matrix4f.rotate(rotation.x, new Vector3f(1, 0, 0), cameraMatrix, cameraMatrix);
-		Matrix4f.rotate(rotation.z, new Vector3f(0, 0, 1), cameraMatrix, cameraMatrix);
-
-		return cameraMatrix;
 	}
 	
 	public Matrix4f getProjectionMatrix() {

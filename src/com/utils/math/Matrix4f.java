@@ -52,55 +52,55 @@ public class Matrix4f {
 		m33 = m.m33;
 	}
 	
-	public Matrix4f(float[] v) {
+	public Matrix4f(float[] buffer) {
 		try {
-			if(v.length < 16)
+			if(buffer.length < 16)
 				throw new Exception();
 		} catch (Exception e) {
 			System.err.println("Float buffer too small.");
 			e.printStackTrace();
 		}
 		
-		m00 = v[0];
-		m01 = v[1];
-		m02 = v[2];
-		m03 = v[3];
+		m00 = buffer[0];
+		m01 = buffer[1];
+		m02 = buffer[2];
+		m03 = buffer[3];
 		
-		m10 = v[4];
-		m11 = v[5];
-		m12 = v[6];
-		m13 = v[7];
+		m10 = buffer[4];
+		m11 = buffer[5];
+		m12 = buffer[6];
+		m13 = buffer[7];
 		
-		m20 = v[8];
-		m21 = v[9];
-		m22 = v[10];
-		m23 = v[11];
+		m20 = buffer[8];
+		m21 = buffer[9];
+		m22 = buffer[10];
+		m23 = buffer[11];
 		
-		m30 = v[12];
-		m31 = v[13];
-		m32 = v[14];
-		m33 = v[15];
+		m30 = buffer[12];
+		m31 = buffer[13];
+		m32 = buffer[14];
+		m33 = buffer[15];
 	}
 	
-	public void store(FloatBuffer buf) {
-		buf.clear();
-		buf.put(m00);
-		buf.put(m01);
-		buf.put(m02);
-		buf.put(m03);
-		buf.put(m10);
-		buf.put(m11);
-		buf.put(m12);
-		buf.put(m13);
-		buf.put(m20);
-		buf.put(m21);
-		buf.put(m22);
-		buf.put(m23);
-		buf.put(m30);
-		buf.put(m31);
-		buf.put(m32);
-		buf.put(m33);
-		buf.flip();
+	public void store(FloatBuffer buffer) {
+		buffer.clear();
+		buffer.put(m00);
+		buffer.put(m01);
+		buffer.put(m02);
+		buffer.put(m03);
+		buffer.put(m10);
+		buffer.put(m11);
+		buffer.put(m12);
+		buffer.put(m13);
+		buffer.put(m20);
+		buffer.put(m21);
+		buffer.put(m22);
+		buffer.put(m23);
+		buffer.put(m30);
+		buffer.put(m31);
+		buffer.put(m32);
+		buffer.put(m33);
+		buffer.flip();
 	}
 	
 	public static void multiply(Matrix4f left, Matrix4f right, Matrix4f dest) {

@@ -1,4 +1,4 @@
-package com.objects.textures;
+package com.entity.texture;
 
 public class TileMap extends Material{
 	private int tiles;

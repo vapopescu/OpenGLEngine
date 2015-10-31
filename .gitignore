@@ -4,6 +4,4 @@ doc
 jar/
 native/
 OpenGL Engine.jar
-message.txt
-*.sw*
-.*.sw*
+msg.txt

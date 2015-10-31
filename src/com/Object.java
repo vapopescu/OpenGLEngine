@@ -23,6 +23,7 @@ public class Object {
 				obj.notifyAll();
 				list.add(obj);
 				obj.ready = true;
+				
 			}
 		}
 	}

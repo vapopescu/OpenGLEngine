@@ -21,6 +21,8 @@ public class Input {
 	private boolean[] keyboardKeyDownBuffer = new boolean[512];
 	private boolean[] keyboardKeyUpBuffer = new boolean[512];
 	
+	Vector3f testRotation = new Vector3f();
+	
 	public Input(long window) {
 		
 		keyCallback = new GLFWKeyCallback() {
@@ -91,6 +93,7 @@ public class Input {
 		Vector3f cameraStrafe = Camera.getActive().getStrafe();
 		Vector3f cameraRotation = Camera.getActive().getRotation();
 		Vector3f cameraPivot = Camera.getActive().getPivot();
+		
 
 		if (isKeyDown(GLFW_KEY_UP)) {
 			cameraRotation.x += xyRotDelta;
@@ -117,9 +120,30 @@ public class Input {
 			cameraStrafe.y -= scaleDelta;
 		}
 		
+		if (isKeyDown(GLFW_KEY_I)) {
+			testRotation.x += xyRotDelta;
+		}
+		if (isKeyDown(GLFW_KEY_K)) {
+			testRotation.x -= xyRotDelta;
+		}
+		if (isKeyDown(GLFW_KEY_J)) {
+			testRotation.z += zRotDelta;
+		}
+		if (isKeyDown(GLFW_KEY_L)) {
+			testRotation.z -= zRotDelta;
+		}
+		if (isKeyDown(GLFW_KEY_U)) {
+			testRotation.y += xyRotDelta;
+		}
+		if (isKeyDown(GLFW_KEY_O)) {
+			testRotation.y -= xyRotDelta;
+		}
+		
 		Camera.getActive().setStrafe(cameraStrafe);
 		Camera.getActive().setRotation(cameraRotation);
 		Camera.getActive().setPivot(cameraPivot);
+		
+		Game.get().rotate_test(testRotation);
 		
 		if (atKeyDown(GLFW_KEY_F12)) {
 			int time[] = Time.get();

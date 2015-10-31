@@ -1,23 +1,28 @@
 package com;
 
-import com.objects.Model;
-import com.objects.PostFilter;
-import com.objects.Screen;
-import com.objects.Terrain;
+import com.entity.Model;
+import com.entity.PostFilter;
+import com.entity.Screen;
+import com.entity.Terrain;
 import com.shaders.Shader;
 import com.utils.math.Matrix4f;
+import com.utils.math.Vector3f;
 import com.utils.math.Vector4f;
 
 public class Game extends com.Object {
-	Screen screen = new Screen();
-	Camera camera = new Camera();
-	Model m1 = new Model();
-	Model m2 = new Model();
-	Terrain terrain = new Terrain();
-	Light light = new Light();
-	PostFilter filter = new PostFilter();
+	public static Game handler; 
+	
+	private Screen screen = new Screen();
+	private Camera camera = new Camera();
+	private Model m1 = new Model();
+	@SuppressWarnings("unused")
+	private Model m2 = new Model();
+	private Terrain terrain = new Terrain();
+	private Light light = new Light();
+	private PostFilter filter = new PostFilter();
 	
 	public Game() {
+		handler = this;
 		startThread();
 	}
 
@@ -52,6 +57,14 @@ public class Game extends com.Object {
 		//filter.apply("BlurX");
 		//filter.apply("BlurY");
 		filter.drawTo();
+	}
+	
+	public void rotate_test(Vector3f vector) {
+		m1.setRotation(vector);
+	}
+	
+	public static Game get() {
+		return handler;
 	}
 	
 	public void destroy() {

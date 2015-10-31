@@ -1,4 +1,4 @@
-package com.objects.textures;
+package com.entity.texture;
 
 import static com.utils.Utils.byteToInt;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;

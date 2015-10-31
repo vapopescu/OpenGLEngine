@@ -1,4 +1,4 @@
-package com.objects;
+package com.entity;
 
 import static com.utils.Utils.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -10,7 +10,7 @@ import java.nio.*;
 
 import org.lwjgl.*;
 
-import com.objects.textures.*;
+import com.entity.texture.*;
 import com.shaders.*;
 import com.utils.math.*;
 
@@ -183,8 +183,7 @@ public class Terrain extends Entity{
 	}
 	
 	public void render() {
-		calculateModelMatrix();
-		calculateNormalMatrix();
+		calculateMNMatrix();
 		Shader.setMNMatrices(modelMatrix, normalMatrix);
 		Shader.setTerrain(width / def, height / def, tiles);
 		

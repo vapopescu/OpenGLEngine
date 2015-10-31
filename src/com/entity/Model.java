@@ -1,4 +1,4 @@
-package com.objects;
+package com.entity;
 
 import java.io.*;
 import java.util.*;
@@ -7,7 +7,7 @@ import javax.xml.parsers.*;
 
 import org.w3c.dom.*;
 
-import com.objects.textures.*;
+import com.entity.texture.*;
 import com.shaders.*;
 import com.utils.math.*;
 
@@ -163,8 +163,7 @@ public class Model extends Entity {
 	}
 
 	public void render() {
-		calculateModelMatrix();
-		calculateNormalMatrix();
+		calculateMNMatrix();
 
 		Shader.setMNMatrices(modelMatrix, normalMatrix);
 		Shader.setProgram("Pass");
